@@ -1,0 +1,124 @@
+/* CSS RESET - do not remove */
+/* Reset default browser styles and provide a consistent starting point */
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  
+  body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+    margin: 0;
+    padding: 0;
+    font-weight: lighter;
+    font-size: 10px;
+    font-family:Arial, Helvetica, sans-serif
+  }
+
+  h1 {
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    height: 100px;
+    align-items: center;
+
+  }
+
+.line {
+    display: flex;
+    justify-content: space-around;
+}
+
+.section1,
+.section2,
+.section3,
+.section4,
+.section5,
+.section6 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section1 {
+    background-color: aqua;
+    width: 30%;
+}
+.section2 {
+    background-color: aqua;
+    width: 33%;
+}
+.section3 {
+    display: flex;
+    justify-content: left;
+    background-color: aqua;
+    width: 30%;
+}
+.section4 {
+    width: 30%;
+    background-color: aquamarine;
+}
+.section5 {
+    display: flex;
+    background-color: aquamarine;
+    width: 33%;
+    margin-top: 10px;
+}
+
+.section6 {
+    display: flex;
+    background-color: aquamarine;
+    width: 30%;
+}
+
+.box {
+    width: 350px;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid black;
+    border-radius: 10px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 12px;
+}
+
+.grid button {
+    width: 55px;
+    height: 55px;
+    font-size: 1.5rem;
+}
+
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 10px;
+    background-color: white;
+    border: solid;
+    border-radius: 5px;
+    border-width: 2px;
+}
+
+#timer {
+    font-size: 20px;
+    text-align: right;
+}
+
+.game-buttons {
+    display: flex;
+}
+
+.game-buttons button {
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    font-size: 1rem;
+}
