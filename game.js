@@ -19,6 +19,8 @@ fs.readFile('dictionary.txt', 'utf8', (err, data) => {
 });
 
 */
+
+
 const points = {
   A: 2,
   B: 4,
@@ -75,13 +77,11 @@ startButton.addEventListener("click", function () {
       randomLetter = Randomizer.getRandomElement(vocals);
     }
 
-    const pointValue = points[randomLetter]; // Retrieve the point value from the 'points' object
+    const pointValue = points[randomLetter];
 
-    // Create span elements for the letter and the sub-index
     const letterSpan = document.createElement("span");
     const subIndex = document.createElement("sub");
 
-    // Set the content and styles of the letter span
     letterSpan.textContent = randomLetter;
     letterSpan.style.display = "flex";
     letterSpan.style.alignItems = "center";
@@ -89,22 +89,22 @@ startButton.addEventListener("click", function () {
     letterSpan.style.height = "100%";
     letterSpan.style.position = "relative";
 
-    // Set the content and styles of the sub-index
     subIndex.textContent = pointValue;
-    subIndex.style.fontSize = "0.7rem"; // Adjust the font size as desired
+    subIndex.style.fontSize = "0.7rem";
     subIndex.style.position = "absolute";
     subIndex.style.bottom = "2px";
     subIndex.style.right = "2px";
 
-    // Append the sub-index to the letter span
     letterSpan.appendChild(subIndex);
 
-    // Clear the button and append the letter span
     button.innerHTML = "";
     button.appendChild(letterSpan);
+    button.classList.remove("used"); // Reset the "used" class
+    button.classList.remove("highlight"); // Reset the "highlight" class
   });
 
   startButton.style.display = "none";
+  currentWord = ""; // Reset the current word
 
   intervalId = setInterval(function () {
     timerSeconds--;
@@ -118,4 +118,16 @@ startButton.addEventListener("click", function () {
       startButton.style.display = "block";
     }
   }, 1000);
+});
+
+const section1 = document.querySelector(".section1");
+const gridButtons = document.querySelectorAll(".grid button");
+let currentWord = "";
+
+gridButtons.forEach(function (button) {
+  button.addEventListener("click", function () {
+    const clickedLetter = button.textContent[0];
+    currentWord += clickedLetter;
+    section1.textContent = currentWord;
+  });
 });
