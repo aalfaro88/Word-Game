@@ -45,7 +45,37 @@ html {
 .section1 {
     background-color: aqua;
     width: 30%;
+    justify-content: space-around;
+    align-items: self-start;
+    max-height: 350px;
+    overflow: auto;
 }
+
+.sub1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: azure;
+    width: 65%;
+    margin-top: 10px;
+    font-size: .9rem;
+}
+.sub2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: azure;
+    width: 30%;
+    margin-top: 10px;
+    text-align: center;
+    font-size: .9rem;
+
+}
+
+h2 {
+    font-size: 1.1rem;
+}
+
 .section2 {
     background-color: aqua;
     width: 33%;
@@ -56,10 +86,25 @@ html {
     background-color: aqua;
     width: 30%;
 }
+
 .section4 {
+    display: flex;
+    background-color: aqua;
     width: 30%;
-    background-color: aquamarine;
-}
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+  
+  #selected-word {
+    font-size: .8rem;
+    margin-right: 10px;
+  }
+  
+
+
 .section5 {
     display: flex;
     background-color: aquamarine;
@@ -122,3 +167,7 @@ html {
     cursor: pointer;
     font-size: 1rem;
 }
+
+.highlight {
+    background-color: yellow;
+  }

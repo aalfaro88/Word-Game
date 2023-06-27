@@ -51,7 +51,8 @@ const points = {
 };
 
 const consonants = ["B", "B", "C", "C", "C", "D", "D", "D", "F", "F", "G", "G", "H", "H", "H", "H", "J", "K", "K", "L", "L", "L", "M", "M", "N", "N", "N", "N", "P", "P", "Q", "R", "R", "R", "R", "S", "S", "S", "S", "T", "T", "T", "T", "V", "V", "W", "W", "X", "Y", "Y", "Z"];
-const vocals = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U"];
+const vocals = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U"];
+const letters = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U",];
 
 class Randomizer {
   static getRandomElement(array) {
@@ -99,12 +100,12 @@ startButton.addEventListener("click", function () {
 
     button.innerHTML = "";
     button.appendChild(letterSpan);
-    button.classList.remove("used"); // Reset the "used" class
-    button.classList.remove("highlight"); // Reset the "highlight" class
+    button.classList.remove("used"); 
+    button.classList.remove("highlight"); 
   });
 
   startButton.style.display = "none";
-  currentWord = ""; // Reset the current word
+  currentWord = ""; 
 
   intervalId = setInterval(function () {
     timerSeconds--;
@@ -123,11 +124,98 @@ startButton.addEventListener("click", function () {
 const section1 = document.querySelector(".section1");
 const gridButtons = document.querySelectorAll(".grid button");
 let currentWord = "";
+let isMouseDown = false;
+let lastSelectedButton = null;
+let selectedButtons = new Set();
+let createdWords = [];
 
 gridButtons.forEach(function (button) {
-  button.addEventListener("click", function () {
+  button.addEventListener("mousedown", function () {
+    isMouseDown = true;
     const clickedLetter = button.textContent[0];
-    currentWord += clickedLetter;
-    section1.textContent = currentWord;
+    if (lastSelectedButton === null || (isNeighborButton(button, lastSelectedButton) && !selectedButtons.has(button))) {
+      currentWord += clickedLetter;
+      document.getElementById("selected-word").textContent = currentWord;
+      button.classList.add("highlight"); 
+      lastSelectedButton = button;
+      selectedButtons.add(button);
+    }
+  });
+
+  button.addEventListener("mouseup", function () {
+    isMouseDown = false;
+    lastSelectedButton = null;
+    removeHighlight();
+    if (currentWord.length > 0) {
+      createdWords.push(currentWord);
+      currentWord = "";
+      updateSection1();
+    }
+  });
+
+  function updateSection1() {
+    const sub1 = document.querySelector(".sub1");
+    const sub2 = document.querySelector(".sub2");
+  
+    sub1.innerHTML = "<h2>Words</h2>";
+    sub2.innerHTML = "<h2>Points</h2>";
+  
+    createdWords.forEach(function (word) {
+      const wordItem = document.createElement("div");
+      wordItem.textContent = word;
+      sub1.appendChild(wordItem);
+  
+      const pointsItem = document.createElement("div");
+      const wordPoints = calculateWordPoints(word);
+      pointsItem.textContent = wordPoints;
+      sub2.appendChild(pointsItem);
+    });
+  }
+  
+  function calculateWordPoints(word) {
+    let totalPoints = 0;
+    for (let i = 0; i < word.length; i++) {
+      const letter = word[i].toUpperCase();
+      totalPoints += points[letter] || 0;
+    }
+    return totalPoints;
+  }
+  
+
+  function calculateWordPoints(word) {
+    let totalPoints = 0;
+    for (let i = 0; i < word.length; i++) {
+      const letter = word[i].toUpperCase();
+      totalPoints += points[letter] || 0;
+    }
+    return totalPoints;
+  }
+  
+  button.addEventListener("mouseenter", function () {
+    if (isMouseDown) {
+      const clickedLetter = button.textContent[0];
+      if (lastSelectedButton === null || (isNeighborButton(button, lastSelectedButton) && !selectedButtons.has(button))) {
+        currentWord += clickedLetter;
+        document.getElementById("selected-word").textContent = currentWord;
+        button.classList.add("highlight"); 
+        lastSelectedButton = button;
+        selectedButtons.add(button);
+      }
+    }
   });
 });
+
+function isNeighborButton(button1, button2) {
+  const button1Index = Array.from(gridButtons).indexOf(button1);
+  const button2Index = Array.from(gridButtons).indexOf(button2);
+  const rowDiff = Math.abs(Math.floor(button1Index / 5) - Math.floor(button2Index / 5));
+  const colDiff = Math.abs((button1Index % 5) - (button2Index % 5));
+  return (rowDiff <= 1 && colDiff <= 1);
+}
+
+function removeHighlight() {
+  selectedButtons.forEach(function (button) {
+    button.classList.remove("highlight");
+  });
+  selectedButtons.clear();
+}
