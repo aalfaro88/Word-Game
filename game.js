@@ -65,7 +65,7 @@ class Randomizer {
 const startButton = document.getElementById("start-button");
 const timerElement = document.getElementById("timer");
 
-let timerSeconds = 30;
+let timerSeconds = 3;
 let intervalId;
 
 const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
@@ -118,25 +118,60 @@ startButton.addEventListener("click", function () {
   startButton.style.display = "none";
   currentWord = "";
 
-  let intervalId = setInterval(function () {
-    timerSeconds--;
-    if (timerSeconds >= 0) {
-      const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
-      const seconds = (timerSeconds % 60).toString().padStart(2, "0");
-      timerElement.textContent = `${minutes}:${seconds}`;
-    } else {
-      clearInterval(intervalId);
-      timerElement.textContent = "00:00";
-      startButton.style.display = "block";
-      gridButtons.forEach(function (button) {
-        button.style.display = "none";
-      });
-      timerSeconds = 10;
-      const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
-      const seconds = (timerSeconds % 60).toString().padStart(2, "0");
-      timerElement.textContent = `${minutes}:${seconds}`;
-    }
-  }, 1000);
+
+let intervalId = setInterval(function () {
+  timerSeconds--;
+  if (timerSeconds > 0) {
+    const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
+    const seconds = (timerSeconds % 60).toString().padStart(2, "0");
+    timerElement.textContent = `${minutes}:${seconds}`;
+  } else if (timerSeconds === 0) {
+    clearInterval(intervalId);
+    timerElement.textContent = "00:00";
+    startButton.style.display = "block";
+    gridButtons.forEach(function (button) {
+      button.style.display = "none";
+    });
+    timerSeconds = 3;
+    const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
+    const seconds = (timerSeconds % 60).toString().padStart(2, "0");
+    timerElement.textContent = `${minutes}:${seconds}`;
+
+    const modal = document.getElementById("gameOverModal");
+    modal.style.display = "block";
+
+   
+    const restartButton = document.getElementById("restartButton");
+    restartButton.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  } else {
+    clearInterval(intervalId);
+    timerElement.textContent = "00:00";
+    startButton.style.display = "block";
+    gridButtons.forEach(function (button) {
+      button.style.display = "none";
+    });
+    timerSeconds = 10;
+    const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
+    const seconds = (timerSeconds % 60).toString().padStart(2, "0");
+    timerElement.textContent = `${minutes}:${seconds}`;
+
+    // Show the game over modal
+    const modal = document.getElementById("gameOverModal");
+    modal.style.display = "block";
+
+    // Restart the game when the "Restart Game" button is clicked
+    const restartButton = document.getElementById("restartButton");
+    restartButton.addEventListener("click", function () {
+      modal.style.display = "none";
+      // Add code here to reset the game and start again
+    });
+  }
+}, 1000);
+
+
+  
 });
 
 const section1 = document.querySelector(".section1");
