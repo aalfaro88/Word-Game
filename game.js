@@ -1,28 +1,5 @@
-/*
-
-const fs = require('fs');
-
-fs.readFile('dictionary.txt', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-
-  const words = data.split('\n');
-  let word = "hello";
-
-  if (words.includes(word)) {
-    console.log("You get points!");
-  } else {
-    console.log("It does not exist.");
-  }
-});
-
-*/
-
 // General Arrays: points = Value of each letter. Consonants, Vocals and Letters are used to randomize, 
 // giving more probability to letters that appear more in english dictionary.
-
 const points = {
   A: 2,
   B: 4,
@@ -71,7 +48,7 @@ class Randomizer {
 const startButton = document.getElementById("start-button");
 const timerElement = document.getElementById("timer");
 
-let timerSeconds = 10;
+let timerSeconds = 60;
 let intervalId;
 
 const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
@@ -83,6 +60,10 @@ timerElement.textContent = `${minutes}:${seconds}`;
 startButton.addEventListener("click", function () {
   const gridButtons = document.querySelectorAll(".grid button");
   createdWords = []
+  const sub1 = document.querySelector(".sub1");
+  sub1.innerHTML = "<h2>Words</h2>";
+  const sub2 = document.querySelector(".sub2");
+  sub2.innerHTML = "<h2>Points</h2>";
 
  
   gridButtons.forEach(function (button) {
@@ -166,7 +147,7 @@ let intervalId = setInterval(function () {
       button.style.display = "none";
     });
 
-    timerSeconds = 10;
+    timerSeconds = 60;
     const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
     const seconds = (timerSeconds % 60).toString().padStart(2, "0");
     timerElement.textContent = `${minutes}:${seconds}`;
@@ -222,12 +203,18 @@ gridButtons.forEach(function (button, index) {
     lastSelectedButton = null;
     removeHighlight();
     if (currentWord.length > 0) {
-      createdWords.push(currentWord);
-      updateButtonsAtPositions(letterPositions);
-      currentWord = "";
-      updateSection1();
+      console.log(currentWord)
+      console.log(currentWord.toLowerCase())
+      if(checker(currentWord.toLowerCase())){
+        createdWords.push(currentWord);
+        updateButtonsAtPositions(letterPositions);
+        currentWord = "";
+        updateSection1();
+        letterPositions = [];
+      }
+        letterPositions = [];
+        currentWord = "";
     }
-  letterPositions = [];
   });
 
   function updateSection1() {
@@ -355,3 +342,24 @@ function finalPointsCal(words){
   wordMaxPoints = createdWords[indexOfMaxPoint]
 
 }
+
+//Word checker!
+let words = [];
+
+fetch('dictionary.txt')
+  .then(response => response.text())
+  .then(data => {
+    words = data.split('\n');
+  })
+  .catch(error => {
+    console.error(error);
+  });
+
+function checker(word) {
+  if (words.includes(word)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
