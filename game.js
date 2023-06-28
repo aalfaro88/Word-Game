@@ -52,23 +52,34 @@ const points = {
 
 const consonants = ["B", "B", "C", "C", "C", "D", "D", "D", "F", "F", "G", "G", "H", "H", "H", "H", "J", "K", "K", "L", "L", "L", "M", "M", "N", "N", "N", "N", "P", "P", "Q", "R", "R", "R", "R", "S", "S", "S", "S", "T", "T", "T", "T", "V", "V", "W", "W", "X", "Y", "Y", "Z"];
 const vocals = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U"];
-const letters = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U",];
+const letters = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","B", "B", "C", "C", "C", "D", "D", "D", "F", "F", "G", "G", "H", "H", "H", "H", "J", "K", "K", "L", "L", "L", "M", "M", "N", "N", "N", "N", "P", "P", "Q", "R", "R", "R", "R", "S", "S", "S", "S", "T", "T", "T", "T", "V", "V", "W", "W", "X", "Y", "Y", "Z"];
 
 class Randomizer {
   static getRandomElement(array) {
     const randomIndex = Math.floor(Math.random() * array.length);
-    return array[randomIndex];
+    let initialArray = array[randomIndex];
+    return initialArray;
   }
 }
 
 const startButton = document.getElementById("start-button");
 const timerElement = document.getElementById("timer");
 
-let timerSeconds = 60;
+let timerSeconds = 30;
 let intervalId;
+
+const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
+const seconds = (timerSeconds % 60).toString().padStart(2, "0");
+timerElement.textContent = `${minutes}:${seconds}`;
+
 
 startButton.addEventListener("click", function () {
   const gridButtons = document.querySelectorAll(".grid button");
+
+ 
+  gridButtons.forEach(function (button) {
+    button.style.display = "block";
+  });
 
   gridButtons.forEach(function (button) {
     let randomLetter;
@@ -100,14 +111,14 @@ startButton.addEventListener("click", function () {
 
     button.innerHTML = "";
     button.appendChild(letterSpan);
-    button.classList.remove("used"); 
-    button.classList.remove("highlight"); 
+    button.classList.remove("used");
+    button.classList.remove("highlight");
   });
 
   startButton.style.display = "none";
-  currentWord = ""; 
+  currentWord = "";
 
-  intervalId = setInterval(function () {
+  let intervalId = setInterval(function () {
     timerSeconds--;
     if (timerSeconds >= 0) {
       const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
@@ -117,6 +128,13 @@ startButton.addEventListener("click", function () {
       clearInterval(intervalId);
       timerElement.textContent = "00:00";
       startButton.style.display = "block";
+      gridButtons.forEach(function (button) {
+        button.style.display = "none";
+      });
+      timerSeconds = 10;
+      const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
+      const seconds = (timerSeconds % 60).toString().padStart(2, "0");
+      timerElement.textContent = `${minutes}:${seconds}`;
     }
   }, 1000);
 });
@@ -128,19 +146,27 @@ let isMouseDown = false;
 let lastSelectedButton = null;
 let selectedButtons = new Set();
 let createdWords = [];
+let letterPositions = [];
 
 gridButtons.forEach(function (button) {
+  button.style.display = "none";
+});
+
+gridButtons.forEach(function (button, index) {
   button.addEventListener("mousedown", function () {
     isMouseDown = true;
     const clickedLetter = button.textContent[0];
     if (lastSelectedButton === null || (isNeighborButton(button, lastSelectedButton) && !selectedButtons.has(button))) {
       currentWord += clickedLetter;
       document.getElementById("selected-word").textContent = currentWord;
-      button.classList.add("highlight"); 
+      button.classList.add("highlight");
       lastSelectedButton = button;
       selectedButtons.add(button);
+      letterPositions.push(index);
+      console.log(letterPositions);
     }
   });
+
 
   button.addEventListener("mouseup", function () {
     isMouseDown = false;
@@ -148,9 +174,11 @@ gridButtons.forEach(function (button) {
     removeHighlight();
     if (currentWord.length > 0) {
       createdWords.push(currentWord);
+      updateButtonsAtPositions(letterPositions);
       currentWord = "";
       updateSection1();
     }
+  letterPositions = [];
   });
 
   function updateSection1() {
@@ -182,14 +210,6 @@ gridButtons.forEach(function (button) {
   }
   
 
-  function calculateWordPoints(word) {
-    let totalPoints = 0;
-    for (let i = 0; i < word.length; i++) {
-      const letter = word[i].toUpperCase();
-      totalPoints += points[letter] || 0;
-    }
-    return totalPoints;
-  }
   
   button.addEventListener("mouseenter", function () {
     if (isMouseDown) {
@@ -197,9 +217,11 @@ gridButtons.forEach(function (button) {
       if (lastSelectedButton === null || (isNeighborButton(button, lastSelectedButton) && !selectedButtons.has(button))) {
         currentWord += clickedLetter;
         document.getElementById("selected-word").textContent = currentWord;
-        button.classList.add("highlight"); 
+        button.classList.add("highlight");
         lastSelectedButton = button;
         selectedButtons.add(button);
+        letterPositions.push(index);
+        console.log(letterPositions);
       }
     }
   });
@@ -218,4 +240,41 @@ function removeHighlight() {
     button.classList.remove("highlight");
   });
   selectedButtons.clear();
+}
+
+function updateButtonsAtPositions(positions) {
+  positions.forEach(function (position) {
+    const button = gridButtons[position];
+    let randomLetter;
+    if (Math.random() < 0.6) {
+      randomLetter = Randomizer.getRandomElement(consonants);
+    } else {
+      randomLetter = Randomizer.getRandomElement(vocals);
+    }
+
+    const pointValue = points[randomLetter];
+
+    const letterSpan = document.createElement("span");
+    const subIndex = document.createElement("sub");
+
+    letterSpan.textContent = randomLetter;
+    letterSpan.style.display = "flex";
+    letterSpan.style.alignItems = "center";
+    letterSpan.style.justifyContent = "center";
+    letterSpan.style.height = "100%";
+    letterSpan.style.position = "relative";
+
+    subIndex.textContent = pointValue;
+    subIndex.style.fontSize = "0.7rem";
+    subIndex.style.position = "absolute";
+    subIndex.style.bottom = "2px";
+    subIndex.style.right = "2px";
+
+    letterSpan.appendChild(subIndex);
+
+    button.innerHTML = "";
+    button.appendChild(letterSpan);
+    button.classList.remove("used");
+    button.classList.remove("highlight");
+  });
 }

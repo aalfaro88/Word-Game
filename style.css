@@ -79,6 +79,8 @@ h2 {
 .section2 {
     background-color: aqua;
     width: 33%;
+    min-width: 350px;
+    min-height: 350px;
 }
 .section3 {
     display: flex;
@@ -166,8 +168,36 @@ h2 {
     background-color: #f1f1f1;
     cursor: pointer;
     font-size: 1rem;
+    border-radius: 7px;
 }
 
 .highlight {
     background-color: yellow;
   }
+
+  /* Add this CSS for the modal and overlay styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    max-width: 300px;
+    text-align: center;
+  }
+  
+  #restartButton {
+    margin-top: 10px;
+  }
+  
