@@ -203,15 +203,46 @@ gridButtons.forEach(function (button, index) {
     lastSelectedButton = null;
     removeHighlight();
     if (currentWord.length > 0) {
-      console.log(currentWord)
-      console.log(currentWord.toLowerCase())
-      if(checker(currentWord.toLowerCase())){
-        createdWords.push(currentWord);
-        updateButtonsAtPositions(letterPositions);
-        currentWord = "";
-        updateSection1();
-        letterPositions = [];
+      if(currentWord.length > 5){
+        if(checker(currentWord.toLowerCase())){
+          timerSeconds+=10
+          createdWords.push(currentWord);
+          updateButtonsAtPositions(letterPositions);
+          currentWord = "";
+          updateSection1();
+          letterPositions = [];
+        }
+
       }
+      else if(currentWord.length > 4){
+        if(checker(currentWord.toLowerCase())){
+          timerSeconds+=5
+          createdWords.push(currentWord);
+          updateButtonsAtPositions(letterPositions);
+          currentWord = "";
+          updateSection1();
+          letterPositions = [];
+        }
+      }
+      else if(currentWord.length > 3){
+        if(checker(currentWord.toLowerCase())){
+          timerSeconds+=3
+          createdWords.push(currentWord);
+          updateButtonsAtPositions(letterPositions);
+          currentWord = "";
+          updateSection1();
+          letterPositions = [];
+        }
+      }
+      else{
+        if(checker(currentWord.toLowerCase())){
+          createdWords.push(currentWord);
+          updateButtonsAtPositions(letterPositions);
+          currentWord = "";
+          updateSection1();
+          letterPositions = [];
+      }
+    }
         letterPositions = [];
         currentWord = "";
     }
