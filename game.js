@@ -20,6 +20,8 @@ fs.readFile('dictionary.txt', 'utf8', (err, data) => {
 
 */
 
+// General Arrays: points = Value of each letter. Consonants, Vocals and Letters are used to randomize, 
+// giving more probability to letters that appear more in english dictionary.
 
 const points = {
   A: 2,
@@ -54,6 +56,8 @@ const consonants = ["B", "B", "C", "C", "C", "D", "D", "D", "F", "F", "G", "G", 
 const vocals = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U"];
 const letters = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","B", "B", "C", "C", "C", "D", "D", "D", "F", "F", "G", "G", "H", "H", "H", "H", "J", "K", "K", "L", "L", "L", "M", "M", "N", "N", "N", "N", "P", "P", "Q", "R", "R", "R", "R", "S", "S", "S", "S", "T", "T", "T", "T", "V", "V", "W", "W", "X", "Y", "Y", "Z"];
 
+// Randomizer: Gets a random index from any given array.
+
 class Randomizer {
   static getRandomElement(array) {
     const randomIndex = Math.floor(Math.random() * array.length);
@@ -62,25 +66,30 @@ class Randomizer {
   }
 }
 
+// Sets the start button ready and the timer in the given seconds in format 00:00
+
 const startButton = document.getElementById("start-button");
 const timerElement = document.getElementById("timer");
 
-let timerSeconds = 3;
+let timerSeconds = 10;
 let intervalId;
 
 const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
 const seconds = (timerSeconds % 60).toString().padStart(2, "0");
 timerElement.textContent = `${minutes}:${seconds}`;
 
+// Game Initializer. Once start button is clicked, the game starts, the start button dissapears.
 
 startButton.addEventListener("click", function () {
   const gridButtons = document.querySelectorAll(".grid button");
+  createdWords = []
 
  
   gridButtons.forEach(function (button) {
     button.style.display = "block";
   });
 
+  // Apply randomizer to fill the grid. Conserves a good proportion of vocals and consonants.
   gridButtons.forEach(function (button) {
     let randomLetter;
     if (Math.random() < 0.6) {
@@ -88,9 +97,9 @@ startButton.addEventListener("click", function () {
     } else {
       randomLetter = Randomizer.getRandomElement(vocals);
     }
-
+    
+    // Formats the letter and value of the grid.
     const pointValue = points[randomLetter];
-
     const letterSpan = document.createElement("span");
     const subIndex = document.createElement("sub");
 
@@ -118,62 +127,64 @@ startButton.addEventListener("click", function () {
   startButton.style.display = "none";
   currentWord = "";
 
-
+// IF: Initialize the timer to let you play, starts coutdown. ELSE: Finalize the game, give instructions of what happens when game finishes.
 let intervalId = setInterval(function () {
   timerSeconds--;
   if (timerSeconds > 0) {
     const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
     const seconds = (timerSeconds % 60).toString().padStart(2, "0");
     timerElement.textContent = `${minutes}:${seconds}`;
-  } else if (timerSeconds === 0) {
-    clearInterval(intervalId);
-    timerElement.textContent = "00:00";
-    startButton.style.display = "block";
-    gridButtons.forEach(function (button) {
-      button.style.display = "none";
-    });
-    timerSeconds = 3;
-    const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
-    const seconds = (timerSeconds % 60).toString().padStart(2, "0");
-    timerElement.textContent = `${minutes}:${seconds}`;
-
-    const modal = document.getElementById("gameOverModal");
-    modal.style.display = "block";
-
-   
-    const restartButton = document.getElementById("restartButton");
-    restartButton.addEventListener("click", function () {
-      modal.style.display = "none";
-    });
   } else {
     clearInterval(intervalId);
     timerElement.textContent = "00:00";
     startButton.style.display = "block";
+    finalPointsCal(createdWords);
+
+    const modalPointsElement = document.querySelector(".modal-points");
+    modalPointsElement.innerHTML = "";
+
+    const totalPointsElement = document.createElement("p");
+    totalPointsElement.textContent = finalPoints;
+    modalPointsElement.appendChild(totalPointsElement);
+
+    const longestWordElement = document.createElement("p");
+    longestWordElement.textContent = longestWord;
+    modalPointsElement.appendChild(longestWordElement);
+
+    const wordMaxPointsElement = document.createElement("p");
+    wordMaxPointsElement.textContent = wordMaxPoints;
+    modalPointsElement.appendChild(wordMaxPointsElement);
+
+    finalPoints = 0;
+    longestWord = "";
+    currentWordPointArray = [];
+    currentWordPoints = 0;
+    indexOfMaxPoint = 0;
+    wordMaxPoints = "";
+
     gridButtons.forEach(function (button) {
       button.style.display = "none";
     });
+
     timerSeconds = 10;
     const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
     const seconds = (timerSeconds % 60).toString().padStart(2, "0");
     timerElement.textContent = `${minutes}:${seconds}`;
 
-    // Show the game over modal
     const modal = document.getElementById("gameOverModal");
     modal.style.display = "block";
 
-    // Restart the game when the "Restart Game" button is clicked
     const restartButton = document.getElementById("restartButton");
     restartButton.addEventListener("click", function () {
       modal.style.display = "none";
-      // Add code here to reset the game and start again
     });
   }
 }, 1000);
 
-
   
 });
 
+// Define variables that will show us the words created, check if mouse is down, positions, etc.
 const section1 = document.querySelector(".section1");
 const gridButtons = document.querySelectorAll(".grid button");
 let currentWord = "";
@@ -187,6 +198,8 @@ gridButtons.forEach(function (button) {
   button.style.display = "none";
 });
 
+// What happens when you click a letter and continue to hold the click (mousedown), it calls other funcion (isNeighbour) to check and limit the letter
+// you can click.
 gridButtons.forEach(function (button, index) {
   button.addEventListener("mousedown", function () {
     isMouseDown = true;
@@ -202,7 +215,8 @@ gridButtons.forEach(function (button, index) {
     }
   });
 
-
+// Instructions of what happens when you release the click (mouseup). 
+// This includes: Removing the highlight. Randomizing used letters, calculating points.
   button.addEventListener("mouseup", function () {
     isMouseDown = false;
     lastSelectedButton = null;
@@ -245,7 +259,7 @@ gridButtons.forEach(function (button, index) {
   }
   
 
-  
+  // support of mousedown. Check neighbours again, helps with the functionality of what happens after the first click.
   button.addEventListener("mouseenter", function () {
     if (isMouseDown) {
       const clickedLetter = button.textContent[0];
@@ -262,6 +276,7 @@ gridButtons.forEach(function (button, index) {
   });
 });
 
+//function that checks neighbours.
 function isNeighborButton(button1, button2) {
   const button1Index = Array.from(gridButtons).indexOf(button1);
   const button2Index = Array.from(gridButtons).indexOf(button2);
@@ -270,6 +285,7 @@ function isNeighborButton(button1, button2) {
   return (rowDiff <= 1 && colDiff <= 1);
 }
 
+//function that removes the highlight to the selected words after realising.
 function removeHighlight() {
   selectedButtons.forEach(function (button) {
     button.classList.remove("highlight");
@@ -277,6 +293,7 @@ function removeHighlight() {
   selectedButtons.clear();
 }
 
+//Function to help re-randomize the letter used.
 function updateButtonsAtPositions(positions) {
   positions.forEach(function (position) {
     const button = gridButtons[position];
@@ -312,4 +329,29 @@ function updateButtonsAtPositions(positions) {
     button.classList.remove("used");
     button.classList.remove("highlight");
   });
+}
+
+// Point and general data of the game calculator.
+let finalPoints = 0
+let longestWord = ""
+let currentWordPointArray = []
+let currentWordPoints = 0
+let indexOfMaxPoint = 0
+let wordMaxPoints = ""
+
+function finalPointsCal(words){
+  for (let i=0;i<words.length;i++){
+    currentWordPoints = 0;
+    for (let j=0;j<words[i].length;j++){
+      finalPoints+=points[words[i][j]];
+      currentWordPoints += points[words[i][j]];
+    }
+    currentWordPointArray.push(currentWordPoints)
+    if (words[i].length > longestWord.length){
+      longestWord = words[i];
+    }
+  }
+  indexOfMaxPoint = (currentWordPointArray.indexOf(Math.max(...currentWordPointArray)))
+  wordMaxPoints = createdWords[indexOfMaxPoint]
+
 }

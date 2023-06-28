@@ -175,7 +175,6 @@ h2 {
     background-color: yellow;
   }
 
-  /* Add this CSS for the modal and overlay styles */
 .modal {
     display: none;
     position: fixed;
@@ -197,8 +196,25 @@ h2 {
     height: 300px;
     text-align: center;
   }
-  
-  #restartButton {
-    margin-top: 10px;
+
+  .modal-points {
+    display:flex;
+    flex-direction: column;
+    width: 40%;
+    background-color: ghostwhite;
   }
   
+  #restartButton {
+    margin-top: 100px;
+  }
+  
+  .final-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items:center;
+  }
+
+  .final-data > div > p{
+    font-size: .85rem;
+  }
