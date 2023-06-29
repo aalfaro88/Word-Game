@@ -29,9 +29,11 @@ const points = {
   Z: 6
 };
 
-const consonants = ["B", "B", "C", "C", "C", "D", "D", "D", "F", "F", "G", "G", "H", "H", "H", "H", "J", "K", "K", "L", "L", "L", "M", "M", "N", "N", "N", "N", "P", "P", "Q", "R", "R", "R", "R", "S", "S", "S", "S", "T", "T", "T", "T", "V", "V", "W", "W", "X", "Y", "Y", "Z"];
-const vocals = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U"];
-const letters = ["E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","E", "E", "E", "A", "A", "I", "I", "O", "O", "U","U","B", "B", "C", "C", "C", "D", "D", "D", "F", "F", "G", "G", "H", "H", "H", "H", "J", "K", "K", "L", "L", "L", "M", "M", "N", "N", "N", "N", "P", "P", "Q", "R", "R", "R", "R", "S", "S", "S", "S", "T", "T", "T", "T", "V", "V", "W", "W", "X", "Y", "Y", "Z"];
+const consonants = ["B", "B", "C", "C", "C", "D", "D", "D", "F", "F", "G", "G", "H", "H", "H", "J", "K", "K", "L", "L", "L", "M", "M", "N", "N", "N", "P", "P", "Q", "R", "R", "R", "S", "S", "S", "T", "T", "T", "V", "V", "W", "W", "X", "Y", "Y", "Z"];
+const vocals = ["A", "A", "A", "A", "E", "E", "E", "E", "E","E","I", "I", "I", "I", "O", "O", "O", "O", "U", "U", "U"];
+const letters = consonants.concat(vocals);
+
+const consonantsProportion = 0.60
 
 // Randomizer: Gets a random index from any given array.
 
@@ -66,8 +68,7 @@ startButton.addEventListener("click", function () {
   sub1.innerHTML = "<h2>Words</h2>";
   const sub2 = document.querySelector(".sub2");
   sub2.innerHTML = "<h2>Points</h2>";
-
-  
+  stopAnimation()
   gridButtons.forEach(function (button) {
     button.style.display = "block";
   });
@@ -75,7 +76,7 @@ startButton.addEventListener("click", function () {
   // Apply randomizer to fill the grid. Conserves a good proportion of vocals and consonants.
   gridButtons.forEach(function (button) {
     let randomLetter;
-    if (Math.random() < 0.6) {
+    if (Math.random() < consonantsProportion) {
       randomLetter = Randomizer.getRandomElement(consonants);
     } else {
       randomLetter = Randomizer.getRandomElement(vocals);
@@ -126,6 +127,7 @@ let intervalId = setInterval(function () {
     startButton.style.display = "block";
     shuffleButton.style.display = "none";
     finalPointsCal(createdWords);
+    startAnimation()
 
     const modalPointsElement = document.querySelector(".modal-points");
     modalPointsElement.innerHTML = "";
@@ -326,7 +328,7 @@ function updateButtonsAtPositions(positions) {
   positions.forEach(function (position) {
     const button = gridButtons[position];
     let randomLetter;
-    if (Math.random() < 0.6) {
+    if (Math.random() < consonantsProportion) {
       randomLetter = Randomizer.getRandomElement(consonants);
     } else {
       randomLetter = Randomizer.getRandomElement(vocals);
@@ -406,4 +408,71 @@ function checker(word) {
 
 //Shuffle Button
 let allPositions = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
+
+//Animations of falling letter
+function createFallingLetter() {
+  const letter = document.createElement('span');
+  letter.textContent = letters[Math.floor(Math.random() * letters.length)];
+  letter.style.position = 'absolute';
+  letter.style.left = Math.random() * 100 + '%';
+  letter.style.top = '-30px'; 
+  letter.style.fontSize = Math.random() * 30 + 10 + 'px';
+  letter.style.transform = 'rotate(' + (Math.random() * 90 - 45) + 'deg)';
+  return letter;
+}
+function animateFallingLetters() {
+  const container = document.querySelector('.falling-letters-container');
+  const letter = createFallingLetter();
+  container.appendChild(letter);
+
+  const animationDuration = Math.random() * 3000 + 2000;
+
+  letter.animate(
+    [
+      { top: '-30px', opacity: 1 },
+      { top: '100%', opacity: 0 }
+    ],
+    {
+      duration: animationDuration,
+      easing: 'linear',
+      fill: 'forwards'
+    }
+  );
+
+  setTimeout(() => {
+    container.removeChild(letter);
+  }, animationDuration);
+}
+
+let intervalIdAnimation = setInterval(animateFallingLetters, 60);
+let animationRunning = true;
+
+
+function startAnimation() {
+  if (!animationRunning) {
+    intervalIdAnimation = setInterval(animateFallingLetters, 60);
+    animationRunning = true;
+  }
+}
+
+
+function stopAnimation() {
+  if (animationRunning) {
+    clearInterval(intervalIdAnimation);
+    animationRunning = false;
+
+    const container = document.querySelector('.falling-letters-container');
+    const fallingLetters = container.querySelectorAll('span');
+    fallingLetters.forEach((letter) => {
+      container.removeChild(letter);
+    });
+  }
+}
+
+
+
+
+
+
+
 
