@@ -46,11 +46,13 @@ class Randomizer {
 // Sets the start button ready and the timer in the given seconds in format 00:00
 
 const startButton = document.getElementById("start-button");
+const shuffleButton = document.getElementById("shuffle-button");
 const timerElement = document.getElementById("timer");
 
 let timerSeconds = 60;
 let intervalId;
 
+shuffleButton.style.display = "none";
 const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
 const seconds = (timerSeconds % 60).toString().padStart(2, "0");
 timerElement.textContent = `${minutes}:${seconds}`;
@@ -65,7 +67,7 @@ startButton.addEventListener("click", function () {
   const sub2 = document.querySelector(".sub2");
   sub2.innerHTML = "<h2>Points</h2>";
 
- 
+  
   gridButtons.forEach(function (button) {
     button.style.display = "block";
   });
@@ -106,8 +108,11 @@ startButton.addEventListener("click", function () {
   });
 
   startButton.style.display = "none";
+  shuffleButton.style.display = "block";
   currentWord = "";
 
+
+  
 // IF: Initialize the timer to let you play, starts coutdown. ELSE: Finalize the game, give instructions of what happens when game finishes.
 let intervalId = setInterval(function () {
   timerSeconds--;
@@ -119,6 +124,7 @@ let intervalId = setInterval(function () {
     clearInterval(intervalId);
     timerElement.textContent = "00:00";
     startButton.style.display = "block";
+    shuffleButton.style.display = "none";
     finalPointsCal(createdWords);
 
     const modalPointsElement = document.querySelector(".modal-points");
@@ -160,10 +166,14 @@ let intervalId = setInterval(function () {
       modal.style.display = "none";
     });
   }
-}, 1000);
-
-  
+}, 1000);  
 });
+
+shuffleButton.addEventListener("click", function () {
+  updateButtonsAtPositions(allPositions);
+  timerSeconds-=3
+})
+
 
 // Define variables that will show us the words created, check if mouse is down, positions, etc.
 const section1 = document.querySelector(".section1");
@@ -393,4 +403,7 @@ function checker(word) {
     return false;
   }
 }
+
+//Shuffle Button
+let allPositions = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
 

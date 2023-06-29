@@ -93,9 +93,29 @@
     }
     .section3 {
         display: flex;
-        justify-content: left;
+        justify-content: center;
+        align-items: flex-start;
         width: 30%;
+        flex-direction: column
     }
+
+    .instructions{
+        margin-top: 10px;
+        line-height: 1.5;
+        background-color:rgb(216, 228, 255);
+    }
+    .instructions p,ul{
+        font-size: .8rem;
+    }
+
+    .instructions ul{
+        padding-left: 1.5rem;
+    }
+    
+    .instructions span{
+        font-weight: bold;
+    }
+
 
     .section4 {
         display: flex;
@@ -134,6 +154,7 @@
         justify-content: center;
         border: solid black;
         border-radius: 10px;
+        
     }
 
     .grid {
@@ -321,8 +342,27 @@
     }
     .section3 {
         display: flex;
-        justify-content: left;
-        width: 10%;
+        justify-content: center;
+        align-items: flex-start;
+        width: 30%;
+        flex-direction: column
+    }
+
+    .instructions{
+        margin-top: 10px;
+        line-height: 1.5;
+        background-color:rgb(216, 228, 255);
+    }
+    .instructions p,ul{
+        font-size: .8rem;
+    }
+
+    .instructions ul{
+        padding-left: 1.5rem;
+    }
+    
+    .instructions span{
+        font-weight: bold;
     }
 
     .section4 {
@@ -362,6 +402,7 @@
         justify-content: center;
         border: solid black;
         border-radius: 10px;
+        
     }
 
     .grid {
@@ -531,8 +572,8 @@
     .section4,
     .section5 {
       width: 100%;
-      max-width: 500px; /* Set a maximum width for the elements */
-      margin: 10px auto; /* Center the elements horizontally */
+      max-width: 500px; 
+      margin: 10px auto; 
     }
   
     .box {
@@ -541,9 +582,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid black; /* Adjust the border size as needed */
+      border: 2px solid black; 
       border-radius: 10px;
-      box-sizing: border-box; /* Include the border within the width and height */
+      box-sizing: border-box; 
+      
       
     }
   
@@ -679,6 +721,11 @@
         font-size: 1rem;
         margin-right: 10px;
     }
+
+    .instructions{
+        display: none;
+      }
+    
   }
   
 
